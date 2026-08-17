@@ -1,0 +1,25 @@
+# Python virtual environment
+.venv/
+
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test/cache files
+.pytest_cache/
+.coverage
+
+# IDE
+.vscode/
+
+# Generated RAG/vector files
+vector_store/
+faiss_index/
+*.faiss
+*.pkl
+
+# Logs
+*.log

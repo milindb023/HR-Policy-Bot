@@ -1,4 +1,7 @@
 import os
+import logging
+
+
 
 from dotenv import load_dotenv
 from langchain_core.output_parsers import StrOutputParser
@@ -7,6 +10,14 @@ from langchain_openai import ChatOpenAI
 
 from .vector_store import query_index
 from .reranker import rerank
+from .query_router import route_query
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
+)
+
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -90,11 +101,27 @@ def build_rag_chain():
     return PROMPT | llm | StrOutputParser()
 
 
-def ask_question(question, k=3):
+def answer_single_question(question, k=3):
+    """
+    Retrieve, rerank, and answer one question.
+    """
+
+    logger.info("Processing question: %s", question)
+
     # Retrieve more candidates from FAISS first.
     candidates = query_index(question, k=6)
 
+    logger.info(
+        "Retrieved %d candidate chunks",
+        len(candidates),
+    )
+
     if not candidates:
+        logger.warning(
+            "No retrieval results found for question: %s",
+            question,
+        )
+
         return {
             "answer": (
                 "I could not find this information in "
@@ -110,7 +137,17 @@ def ask_question(question, k=3):
         top_k=k,
     )
 
+    logger.info(
+        "Reranked %d chunks",
+        len(results),
+    )
+
     if not results:
+        logger.warning(
+            "No reranked results found for question: %s",
+            question,
+        )
+
         return {
             "answer": (
                 "I could not find this information in "
@@ -130,6 +167,8 @@ def ask_question(question, k=3):
         }
     )
 
+    logger.info("Generated answer successfully")
+
     sources = []
 
     for result in results:
@@ -148,6 +187,68 @@ def ask_question(question, k=3):
     return {
         "answer": answer,
         "sources": sources,
+    }
+
+
+def ask_question(question, k=3):
+    """
+    Route the question into one or more sub-questions,
+    answer each sub-question independently, and combine
+    the results.
+    """
+
+    routed_questions = route_query(question)
+
+    logger.info(
+        "Question routed into %d sub-question(s)",
+        len(routed_questions),
+    )
+
+    if not routed_questions:
+        return {
+            "answer": "Please provide an HR policy question.",
+            "sources": [],
+        }
+
+    # Normal single-question path.
+    if len(routed_questions) == 1:
+
+        return answer_single_question(
+            routed_questions[0],
+            k=k,
+        )
+
+    # Multi-part question path.
+    answers = []
+    all_sources = []
+
+    for index, sub_question in enumerate(
+        routed_questions,
+        start=1,
+    ):
+
+        logger.info(
+            "Processing sub-question %d: %s",
+            index,
+            sub_question,
+        )
+
+        result = answer_single_question(
+            sub_question,
+            k=k,
+        )
+
+        answers.append(
+            f"{index}. {result['answer']}"
+        )
+
+        all_sources.extend(
+            result["sources"]
+        )
+
+    return {
+        "answer": "\n\n".join(answers),
+        "sources": all_sources,
     }
 
 

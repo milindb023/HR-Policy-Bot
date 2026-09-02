@@ -6,7 +6,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 
 from .vector_store import query_index
-
+from .reranker import rerank
 
 load_dotenv()
 
@@ -91,9 +91,24 @@ def build_rag_chain():
 
 
 def ask_question(question, k=3):
-    """Retrieve handbook context and generate a grounded answer."""
+    # Retrieve more candidates from FAISS first.
+    candidates = query_index(question, k=6)
 
-    results = query_index(question, k=k)
+    if not candidates:
+        return {
+            "answer": (
+                "I could not find this information in "
+                "the employee handbook."
+            ),
+            "sources": [],
+        }
+
+    # Re-rank the FAISS candidates using the cross-encoder.
+    results = rerank(
+        question,
+        candidates,
+        top_k=k,
+    )
 
     if not results:
         return {
@@ -126,6 +141,7 @@ def ask_question(question, k=3):
                 "page": metadata.get("page"),
                 "chunk_index": metadata.get("chunk_index"),
                 "score": result["score"],
+                "rerank_score": result.get("rerank_score"),
             }
         )
 
@@ -164,11 +180,12 @@ if __name__ == "__main__":
         print("Sources:")
 
         for source in result["sources"]:
-            print(
+           print(
                 f"- {source['source']} | "
                 f"Page {source['page']} | "
                 f"Chunk {source['chunk_index']} | "
-                f"Score {source['score']:.4f}"
-            )
+                f"FAISS Score {source['score']:.4f} | "
+                f"Rerank Score {source['rerank_score']:.4f}"
+)
 
         print()

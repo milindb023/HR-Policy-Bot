@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+.header h1 {
+    margin-bottom: 10px;
+}
+
+
+.header p {
+    margin: 0;
+    color: #6b7280;
+}
+
+
+.chat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+
+textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 110px;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+
+textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 11px 24px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+button:hover {
+    background: #1d4ed8;
+}
+
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
+.loading {
+    color: #6b7280;
+}
+
+
+.result-section {
+    margin-top: 30px;
+}
+
+
+.result-section h2 {
+    margin-bottom: 12px;
+}
+
+
+.answer {
+    padding: 18px;
+    background: #f9fafb;
+    border-radius: 8px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+
+.source-item {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: #f9fafb;
+    border-left: 4px solid #2563eb;
+    border-radius: 6px;
+}
+
+
+.source-file {
+    font-weight: 600;
+}
+
+
+.source-details {
+    margin-top: 5px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+.error {
+    margin-top: 20px;
+    padding: 14px;
+    background: #fef2f2;
+    color: #b91c1c;
+    border-radius: 8px;
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 20px 12px;
+    }
+
+    .chat-card {
+        padding: 20px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+}

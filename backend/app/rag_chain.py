@@ -44,6 +44,13 @@ Rules:
 4. Give a concise and clear answer.
 5. When possible, include the relevant source page.
 6. Do not treat general knowledge as company policy.
+
+Answer the user's question using only the provided HR policy context.
+
+Do not include source citations, page numbers, chunk numbers, or text such as
+[Source: ...] in your answer.
+
+Source information is returned separately by the application.
 """
 
 

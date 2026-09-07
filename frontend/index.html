@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>HR Policy Assistant</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+    <main class="container">
+
+        <section class="header">
+            <h1>HR Policy Assistant</h1>
+
+            <p>
+                Ask questions about the Employee Handbook and HR policies.
+            </p>
+        </section>
+
+
+        <section class="chat-card">
+
+            <form id="ask-form">
+
+                <label for="question">
+                    Your question
+                </label>
+
+                <textarea
+                    id="question"
+                    name="question"
+                    rows="4"
+                    placeholder="Example: How many annual leave days can employees carry forward?"
+                    required
+                ></textarea>
+
+                <div class="actions">
+
+                    <button
+                        id="ask-button"
+                        type="submit"
+                    >
+                        Ask
+                    </button>
+
+                    <span
+                        id="loading"
+                        class="loading hidden"
+                    >
+                        Processing...
+                    </span>
+
+                </div>
+
+            </form>
+
+
+            <div
+                id="error"
+                class="error hidden"
+            ></div>
+
+
+            <section
+                id="answer-section"
+                class="result-section hidden"
+            >
+
+                <h2>Answer</h2>
+
+                <div
+                    id="answer"
+                    class="answer"
+                ></div>
+
+            </section>
+
+
+            <section
+                id="sources-section"
+                class="result-section hidden"
+            >
+
+                <h2>Sources</h2>
+
+                <div id="sources"></div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <script src="app.js"></script>
+
+</body>
+</html>
